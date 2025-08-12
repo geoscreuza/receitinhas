@@ -1,185 +1,393 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sabores do Brasil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Receitas Brasileiras Melhoradas</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Modal overlay */
+    #recipeModal {
+      background: rgba(0, 0, 0, 0.7);
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+  </style>
 </head>
-<body class="min-h-screen">
-  <!-- Cabeçalho -->
-  <header class="bg-[#167288] text-white shadow-md">
-    <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
-      <h1 class="text-3xl font-bold">Sabores do Brasil</h1>
-      <nav class="flex space-x-6">
-        <a href="#" class="hover:text-[#8cdaec]">Home</a>
-        <a href="#" class="hover:text-[#8cdaec]">Receitas</a>
-        <a href="#" class="hover:text-[#8cdaec]">Sobre</a>
-        <a href="#" class="hover:text-[#8cdaec]">Contato</a>
-      </nav>
-    </div>
-  </header>
+<body class="bg-gray-100 p-6">
 
-  <!-- Conteúdo -->
-  <main class="container mx-auto px-4 py-8">
-    <!-- Destaque -->
-    <section class="mb-12 bg-[#d48c84] text-white p-6 md:p-10 rounded-lg">
-      <h2 class="text-2xl md:text-3xl font-bold mb-4">Receita em Destaque</h2>
-      <h3 class="text-xl md:text-2xl font-semibold mb-4">Feijoada Completa</h3>
-      <p class="mb-6">A tradicional feijoada brasileira, com todos os acompanhamentos que fazem desse prato uma verdadeira festa para o paladar.</p>
-      <button onclick="showRecipe('feijoada')" class="bg-[#b45248] hover:bg-[#a89a49] py-2 px-6 rounded-full font-bold transition">Ver Receita</button>
-    </section>
+  <h1 class="text-3xl font-bold mb-6 text-[#167288] text-center">Receitas Brasileiras</h1>
 
-    <!-- Abas -->
-    <section class="mb-8 overflow-x-auto pb-2 flex space-x-4">
-      <button onclick="filterRecipes('todas', event)" class="tab-button active-tab px-6 py-2 font-medium text-[#167288]">Todas</button>
-      <button onclick="filterRecipes('norte', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Norte</button>
-      <button onclick="filterRecipes('nordeste', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Nordeste</button>
-      <button onclick="filterRecipes('sudeste', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Sudeste</button>
-      <button onclick="filterRecipes('sul', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Sul</button>
-      <button onclick="filterRecipes('centro-oeste', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Centro-Oeste</button>
-    </section>
+  <!-- Busca -->
+  <div class="max-w-md mx-auto mb-6">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Busque por nome da receita..."
+      class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#167288]"
+    />
+  </div>
 
-    <!-- Grid de Receitas -->
-    <section id="recipeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"></section>
+  <!-- Filtros -->
+  <div class="max-w-md mx-auto mb-6 flex flex-wrap justify-center gap-2">
+    <button class="filter-btn bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition" data-region="all">Todas</button>
+    <button class="filter-btn bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition" data-region="sudeste">Sudeste</button>
+    <button class="filter-btn bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition" data-region="nordeste">Nordeste</button>
+    <button class="filter-btn bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition" data-region="sul">Sul</button>
+    <button class="filter-btn bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition" data-region="norte">Norte</button>
+    <button class="filter-btn bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition" data-region="centro-oeste">Centro-Oeste</button>
+  </div>
 
-    <!-- Newsletter -->
-    <section class="bg-[#a89a49] text-white p-8 rounded-lg text-center mb-12 max-w-2xl mx-auto">
-      <h2 class="text-2xl font-bold mb-4">Receba Novas Receitas</h2>
-      <p class="mb-6">Assine nossa newsletter e receba semanalmente receitas típicas de todas as regiões do Brasil.</p>
-      <form class="flex flex-col sm:flex-row gap-4">
-        <input type="email" placeholder="Seu melhor e-mail" class="flex-grow px-4 py-2 rounded-full text-gray-800 focus:outline-none"/>
-        <button type="submit" class="bg-[#b45248] hover:bg-[#167288] py-2 px-6 rounded-full font-bold transition">Assinar</button>
-      </form>
-    </section>
-  </main>
+  <!-- Grid de Receitas -->
+  <section id="recipeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto"></section>
 
-  <!-- Rodapé -->
-  <footer class="bg-[#167288] text-white py-8 text-center">
-    <h2 class="text-xl font-bold mb-2">Sabores do Brasil</h2>
-    <p class="text-[#8cdaec] mb-4">As melhores receitas brasileiras em um só lugar</p>
-    <div class="flex justify-center space-x-4">
-      <a href="#" class="hover:text-[#8cdaec]">Termos</a>
-      <a href="#" class="hover:text-[#8cdaec]">Privacidade</a>
-      <a href="#" class="hover:text-[#8cdaec]">Contato</a>
-    </div>
-    <p class="mt-4 text-[#8cdaec]">© 2023 Sabores do Brasil. Todos os direitos reservados.</p>
-  </footer>
+  <!-- Modal Receita -->
+  <div id="recipeModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-6">
+    <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+      <button onclick="closeModal()" aria-label="Fechar modal" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-3xl font-bold">&times;</button>
+      <img id="modalImage" src="" alt="" class="w-full h-64 object-cover rounded-t-lg" />
+      <div class="p-6">
+        <h2 id="modalTitle" class="text-3xl font-bold mb-4 text-[#167288]"></h2>
+        <h3 class="font-semibold mb-2">Ingredientes:</h3>
+        <ul id="modalIngredients" class="list-disc list-inside mb-6 max-h-48 overflow-y-auto"></ul>
+        <h3 class="font-semibold mb-2">Modo de preparo:</h3>
+        <ol id="modalInstructions" class="list-decimal list-inside mb-6 max-h-48 overflow-y-auto"></ol>
+        <p class="italic text-gray-600 mb-6">Dica: <span id="modalTip"></span></p>
 
-  <!-- Modal -->
-  <div id="recipeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h3 id="modalTitle" class="text-2xl font-bold text-[#167288]">Receita</h3>
-        <button onclick="closeModal()" aria-label="Fechar modal" class="text-gray-500 hover:text-gray-700">
-          ✕
-        </button>
-      </div>
-      <img id="modalImage" src="" alt="Imagem da receita" class="w-full h-48 object-cover rounded mb-4"/>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <h4 class="font-bold text-lg mb-2 text-[#b45248]">Ingredientes</h4>
-          <ul id="modalIngredients" class="list-disc pl-5 space-y-1"></ul>
+        <div class="flex justify-between">
+          <button id="prevBtn" class="bg-[#8cdaec] hover:bg-[#167288] text-white font-semibold py-2 px-6 rounded-full transition">Anterior</button>
+          <button id="nextBtn" class="bg-[#8cdaec] hover:bg-[#167288] text-white font-semibold py-2 px-6 rounded-full transition">Próximo</button>
         </div>
-        <div>
-          <h4 class="font-bold text-lg mb-2 text-[#b45248]">Modo de Preparo</h4>
-          <ol id="modalInstructions" class="list-decimal pl-5 space-y-2"></ol>
-        </div>
-      </div>
-      <div class="bg-[#d48c84] bg-opacity-20 p-4 rounded-lg">
-        <h4 class="font-bold text-lg mb-2 text-[#167288]">Dica do Chef</h4>
-        <p id="modalTip" class="italic"></p>
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
   <script>
     const recipes = {
       feijoada: {
-        title: "Feijoada Completa",
+        title: "Feijoada",
         region: "sudeste",
         image: "https://images.unsplash.com/photo-1547592180-85f173990554",
-        ingredients: ["1 kg de feijão preto", "100 g de carne seca", "70 g de orelha de porco"],
-        instructions: ["Coloque as carnes de molho por 36 horas ou mais.", "Cozinhe tudo junto com o feijão."],
+        description: "O prato mais tradicional do Brasil, com feijão preto e diversas carnes.",
+        ingredients: [
+          "1 kg de feijão preto",
+          "100 g de carne seca",
+          "70 g de orelha de porco"
+        ],
+        instructions: [
+          "Coloque as carnes de molho por 36 horas ou mais.",
+          "Cozinhe tudo junto com o feijão."
+        ],
         tip: "Sirva com laranja e couve refogada."
       },
       acaraje: {
         title: "Acarajé",
         region: "nordeste",
         image: "https://images.unsplash.com/photo-1605291567250-6fff7c036bd0",
-        ingredients: ["500g de feijão fradinho", "2 cebolas médias", "Sal a gosto"],
-        instructions: ["Deixe o feijão de molho.", "Frite em azeite de dendê."],
+        description: "Bolinho de origem africana, típico da culinária baiana.",
+        ingredients: [
+          "500g de feijão fradinho",
+          "2 cebolas médias",
+          "Sal a gosto"
+        ],
+        instructions: [
+          "Deixe o feijão de molho.",
+          "Frite em azeite de dendê."
+        ],
         tip: "Sirva quente com vatapá."
+      },
+      barreado: {
+        title: "Barreado",
+        region: "sul",
+        image: "https://images.unsplash.com/photo-1625938143087-204ca7b9c1c3",
+        description: "Cozido de carne típico do litoral paranaense, cozido por horas.",
+        ingredients: [
+          "1,5 kg de carne bovina",
+          "Sal e pimenta a gosto",
+          "Farinha de mandioca"
+        ],
+        instructions: [
+          "Tempere a carne e cozinhe por várias horas em panela tampada.",
+          "Sirva com farinha de mandioca."
+        ],
+        tip: "Tradicionalmente cozido em panela de barro."
+      },
+      tacaca: {
+        title: "Tacacá",
+        region: "norte",
+        image: "https://images.unsplash.com/photo-1585238342024-78d90f061f9e",
+        description: "Sopa típica da região norte, feita com tucupi, jambu e camarão.",
+        ingredients: [
+          "Tucupi",
+          "Jambu",
+          "Camarão seco",
+          "Goma de tapioca"
+        ],
+        instructions: [
+          "Prepare o tucupi e ferva.",
+          "Adicione jambu e goma, finalize com camarão."
+        ],
+        tip: "Coma quente, direto na cuia."
+      },
+      pamonha: {
+        title: "Pamonha",
+        region: "centro-oeste",
+        image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641",
+        description: "Prato feito com milho verde ralado, geralmente cozido em palha de milho.",
+        ingredients: [
+          "Milho verde ralado",
+          "Leite de coco",
+          "Sal"
+        ],
+        instructions: [
+          "Misture o milho com leite de coco e sal.",
+          "Cozinhe embrulhado em palha de milho."
+        ],
+        tip: "Ótima para comer no café da manhã."
+      },
+      baiao: {
+        title: "Baião de Dois",
+        region: "nordeste",
+        image: "https://images.unsplash.com/photo-1601050690597-df0568f70950",
+        description: "Mistura de arroz e feijão-de-corda, típico do Nordeste brasileiro.",
+        ingredients: [
+          "Arroz",
+          "Feijão-de-corda",
+          "Bacon",
+          "Queijo coalho"
+        ],
+        instructions: [
+          "Cozinhe o feijão e o arroz juntos.",
+          "Refogue bacon e misture com queijo coalho."
+        ],
+        tip: "Sirva quente, prato muito nutritivo."
+      },
+      moqueca: {
+        title: "Moqueca Baiana",
+        region: "nordeste",
+        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+        description: "Peixe cozido com leite de coco, azeite de dendê e temperos.",
+        ingredients: [
+          "1 kg de peixe em postas",
+          "200 ml de leite de coco",
+          "2 tomates picados",
+          "1 pimentão vermelho picado",
+          "1 cebola picada",
+          "Coentro",
+          "Azeite de dendê",
+          "Sal e pimenta"
+        ],
+        instructions: [
+          "Tempere o peixe com sal e pimenta.",
+          "Faça camadas de peixe e vegetais na panela.",
+          "Adicione leite de coco e azeite de dendê.",
+          "Cozinhe em fogo baixo até o peixe ficar macio.",
+          "Finalize com coentro."
+        ],
+        tip: "Sirva com arroz branco e farinha de mandioca."
+      },
+      paoDeQueijo: {
+        title: "Pão de Queijo",
+        region: "sudeste",
+        image: "https://images.unsplash.com/photo-1590080877777-9d263da99a3f",
+        description: "Pãozinho típico mineiro feito com polvilho e queijo.",
+        ingredients: [
+          "500g de polvilho doce",
+          "1 xícara de leite",
+          "1/2 xícara de óleo",
+          "2 ovos",
+          "200g de queijo minas ralado",
+          "Sal"
+        ],
+        instructions: [
+          "Ferva leite, óleo e sal.",
+          "Despeje sobre o polvilho e misture.",
+          "Adicione ovos e queijo, mexa até homogêneo.",
+          "Faça bolinhas e asse a 180ºC até dourar."
+        ],
+        tip: "Coma ainda quentinho, é irresistível."
+      },
+      cuscuz: {
+        title: "Cuscuz Paulista",
+        region: "sudeste",
+        image: "https://images.unsplash.com/photo-1604908177523-0e4343e67d18",
+        description: "Prato feito com farinha de milho, legumes e peixe.",
+        ingredients: [
+          "1 xícara de farinha de milho",
+          "1 cebola picada",
+          "1 tomate picado",
+          "1/2 pimentão vermelho picado",
+          "100g de sardinha",
+          "2 ovos cozidos",
+          "Azeitonas",
+          "Cheiro-verde",
+          "Sal e azeite"
+        ],
+        instructions: [
+          "Refogue cebola, tomate e pimentão.",
+          "Misture a farinha e acrescente água aos poucos.",
+          "Adicione sardinha, ovos, azeitonas e cheiro-verde.",
+          "Coloque em forma, pressione e geladeira para firmar."
+        ],
+        tip: "Sirva frio com salada verde."
+      },
+      brigadeiro: {
+        title: "Brigadeiro",
+        region: "sudeste",
+        image: "https://images.unsplash.com/photo-1606851090994-10d9a38e13e4",
+        description: "Doce típico brasileiro feito com leite condensado e chocolate.",
+        ingredients: [
+          "1 lata de leite condensado",
+          "1 colher de sopa de manteiga",
+          "3 colheres de sopa de chocolate em pó",
+          "Chocolate granulado"
+        ],
+        instructions: [
+          "Misture leite condensado, manteiga e chocolate em pó.",
+          "Cozinhe mexendo até desgrudar do fundo.",
+          "Deixe esfriar, enrole bolinhas e passe no granulado."
+        ],
+        tip: "Delícia geladinho, perfeito para festas."
       }
-      // Adicione os outros aqui...
     };
+
+    let currentFilterRegion = "all";
+    let currentSearchTerm = "";
+    let filteredRecipeEntries = [];
+    let currentRecipeIndex = 0;
+
+    // Função para filtrar receitas baseadas em região e busca
+    function getFilteredRecipes() {
+      return Object.entries(recipes).filter(([id, r]) => {
+        const matchRegion = currentFilterRegion === "all" || r.region === currentFilterRegion;
+        const matchSearch = r.title.toLowerCase().includes(currentSearchTerm.toLowerCase());
+        return matchRegion && matchSearch;
+      });
+    }
 
     function renderRecipes() {
       const grid = document.getElementById("recipeGrid");
       grid.innerHTML = "";
+      filteredRecipeEntries = getFilteredRecipes();
 
-      for (const [id, recipe] of Object.entries(recipes)) {
-        const card = document.createElement("div");
-        card.className = "recipe-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300";
-        card.innerHTML = `
-          <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2 text-[#b45248]">${recipe.title}</h3>
-            <p class="text-sm text-gray-600 capitalize">Região: ${recipe.region}</p>
-            <button onclick="showRecipe('${id}')" class="mt-4 bg-[#167288] hover:bg-[#a89a49] text-white py-1 px-4 rounded-full font-medium transition">Ver Receita</button>
-          </div>
-        `;
-        grid.appendChild(card);
+      if (filteredRecipeEntries.length === 0) {
+        grid.innerHTML = `<p class="col-span-full text-center text-gray-500">Nenhuma receita encontrada.</p>`;
+        return;
       }
+
+      filteredRecipeEntries.forEach(([id, recipe]) => {
+        const card = document.createElement("article");
+        card.className = "bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-xl transition flex flex-col";
+        card.setAttribute("tabindex", "0");
+        card.setAttribute("role", "button");
+        card.setAttribute("aria-pressed", "false");
+        card.onclick = () => openModal(id);
+        card.onkeypress = (e) => { if(e.key === "Enter") openModal(id); };
+
+        card.innerHTML = `
+          <img src="${recipe.image}" alt="${recipe.title}" class="rounded-lg mb-3 w-full h-48 object-cover" />
+          <h2 class="text-xl font-semibold text-[#167288] mb-2">${recipe.title}</h2>
+          <p class="text-gray-700 flex-grow">${recipe.description}</p>
+          <p class="mt-2 text-sm text-gray-500 capitalize font-medium">Região: ${recipe.region.replace("-", " ")}</p>
+        `;
+
+        grid.appendChild(card);
+      });
     }
 
-    function showRecipe(id) {
-      const recipe = recipes[id];
-      if (!recipe) return;
+    // Modal functions
+    function openModal(recipeId) {
+      currentRecipeIndex = filteredRecipeEntries.findIndex(([id]) => id === recipeId);
+      if (currentRecipeIndex === -1) return;
 
-      document.getElementById("modalTitle").innerText = recipe.title;
+      const modal = document.getElementById("recipeModal");
+      updateModalContent(filteredRecipeEntries[currentRecipeIndex][1]);
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden"; // Evita scroll atrás do modal
+      document.getElementById("prevBtn").focus();
+    }
+
+    function updateModalContent(recipe) {
+      document.getElementById("modalTitle").textContent = recipe.title;
       document.getElementById("modalImage").src = recipe.image;
-      document.getElementById("modalIngredients").innerHTML = recipe.ingredients.map(i => `<li>${i}</li>`).join("");
-      document.getElementById("modalInstructions").innerHTML = recipe.instructions.map(i => `<li>${i}</li>`).join("");
-      document.getElementById("modalTip").innerText = recipe.tip;
-      document.getElementById("recipeModal").classList.remove("hidden");
+      document.getElementById("modalImage").alt = recipe.title;
+      const ingrUl = document.getElementById("modalIngredients");
+      ingrUl.innerHTML = "";
+      recipe.ingredients.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        ingrUl.appendChild(li);
+      });
+
+      const instrOl = document.getElementById("modalInstructions");
+      instrOl.innerHTML = "";
+      recipe.instructions.forEach(step => {
+        const li = document.createElement("li");
+        li.textContent = step;
+        instrOl.appendChild(li);
+      });
+
+      document.getElementById("modalTip").textContent = recipe.tip || "";
     }
 
     function closeModal() {
-      document.getElementById("recipeModal").classList.add("hidden");
+      const modal = document.getElementById("recipeModal");
+      modal.classList.add("hidden");
+      document.body.style.overflow = "auto";
     }
 
-    function filterRecipes(region, event) {
-      const buttons = document.querySelectorAll(".tab-button");
-      buttons.forEach(btn => btn.classList.remove("active-tab"));
-      if (event) event.target.classList.add("active-tab");
-
-      const grid = document.getElementById("recipeGrid");
-      grid.innerHTML = "";
-
-      for (const [id, recipe] of Object.entries(recipes)) {
-        if (region === "todas" || recipe.region === region) {
-          const card = document.createElement("div");
-          card.className = "recipe-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300";
-          card.innerHTML = `
-            <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-48 object-cover">
-            <div class="p-4">
-              <h3 class="text-lg font-semibold mb-2 text-[#b45248]">${recipe.title}</h3>
-              <p class="text-sm text-gray-600 capitalize">Região: ${recipe.region}</p>
-              <button onclick="showRecipe('${id}')" class="mt-4 bg-[#167288] hover:bg-[#a89a49] text-white py-1 px-4 rounded-full font-medium transition">Ver Receita</button>
-            </div>
-          `;
-          grid.appendChild(card);
-        }
-      }
+    // Navegação no modal
+    function showPrevRecipe() {
+      if (filteredRecipeEntries.length === 0) return;
+      currentRecipeIndex = (currentRecipeIndex - 1 + filteredRecipeEntries.length) % filteredRecipeEntries.length;
+      updateModalContent(filteredRecipeEntries[currentRecipeIndex][1]);
     }
 
-    window.onload = () => {
+    function showNextRecipe() {
+      if (filteredRecipeEntries.length === 0) return;
+      currentRecipeIndex = (currentRecipeIndex + 1) % filteredRecipeEntries.length;
+      updateModalContent(filteredRecipeEntries[currentRecipeIndex][1]);
+    }
+
+    // Eventos filtros
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", e => {
+        currentFilterRegion = e.target.dataset.region;
+        // Atualiza estilos dos botões
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("bg-[#167288]"));
+        e.target.classList.add("bg-[#167288]");
+        renderRecipes();
+      });
+    });
+
+    // Evento busca
+    document.getElementById("searchInput").addEventListener("input", e => {
+      currentSearchTerm = e.target.value.trim();
       renderRecipes();
-    };
+    });
+
+    // Eventos modal navegação
+    document.getElementById("prevBtn").addEventListener("click", showPrevRecipe);
+    document.getElementById("nextBtn").addEventListener("click", showNextRecipe);
+
+    // Fecha modal ao clicar fora do conteúdo
+    document.getElementById("recipeModal").addEventListener("click", e => {
+      if (e.target.id === "recipeModal") closeModal();
+    });
+
+    // Fecha modal com Esc
+    window.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeModal();
+    });
+
+    // Inicialização
+    // Define o botão "Todas" como ativo no começo
+    document.querySelector(".filter-btn[data-region='all']").classList.add("bg-[#167288]");
+    renderRecipes();
   </script>
 </body>
 </html>
