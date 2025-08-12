@@ -25,7 +25,7 @@ body {
 }
 
 #recipeModal {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.6);
   position: fixed;
   inset: 0;
   display: flex;
@@ -33,3 +33,4 @@ body {
   align-items: center;
   z-index: 50;
 }
+
