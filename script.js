@@ -1,43 +1,39 @@
-// Lista de receitas
 const recipes = [
-    {
-        title: "Moqueca Baiana",
-        description: "Um prato típico do litoral baiano, feito com peixe, leite de coco e dendê.",
-        image: "https://via.placeholder.com/300x200?text=Moqueca"
-    },
-    {
-        title: "Pão de Queijo",
-        description: "Clássico mineiro, crocante por fora e macio por dentro.",
-        image: "https://via.placeholder.com/300x200?text=Pao+de+Queijo"
-    },
-    {
-        title: "Acarajé",
-        description: "Bolinho de feijão-fradinho frito no azeite de dendê, recheado com vatapá e camarão.",
-        image: "https://via.placeholder.com/300x200?text=Acaraje"
-    },
-    {
-        title: "Churrasco Gaúcho",
-        description: "Carne assada na brasa, temperada apenas com sal grosso.",
-        image: "https://via.placeholder.com/300x200?text=Churrasco"
-    }
+    { title: "Feijoada", description: "O prato mais tradicional do Brasil, com feijão preto e diversas carnes.", image: "https://via.placeholder.com/400x250?text=Feijoada", region: "sudeste" },
+    { title: "Acarajé", description: "Bolinho de origem africana, típico da culinária baiana.", image: "https://via.placeholder.com/400x250?text=Acaraje", region: "nordeste" },
+    { title: "Barreado", description: "Cozido de carne típico do litoral paranaense, cozido por horas.", image: "https://via.placeholder.com/400x250?text=Barreado", region: "sul" },
+    { title: "Tacacá", description: "Sopa típica da região norte, feita com tucupi, jambu e camarão.", image: "https://via.placeholder.com/400x250?text=Tacaca", region: "norte" },
+    { title: "Pamonha", description: "Prato feito com milho verde ralado, geralmente cozido em palha de milho.", image: "https://via.placeholder.com/400x250?text=Pamonha", region: "centro-oeste" },
+    { title: "Baião de Dois", description: "Mistura de arroz e feijão-de-corda, típico do Nordeste brasileiro.", image: "https://via.placeholder.com/400x250?text=Baiao+de+Dois", region: "nordeste" }
 ];
 
-// Função para renderizar receitas no grid
-function renderRecipes() {
+function renderRecipes(region = "all") {
     const grid = document.getElementById("recipeGrid");
-    if (!grid) return;
+    grid.innerHTML = "";
 
-    grid.innerHTML = recipes.map(recipe => `
-        <div class="card">
-            <img src="${recipe.image}" alt="${recipe.title}" style="width: 100%; border-radius: 8px;">
+    const filtered = region === "all" ? recipes : recipes.filter(r => r.region === region);
+
+    filtered.forEach(recipe => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.innerHTML = `
+            <img src="${recipe.image}" alt="${recipe.title}">
             <h3>${recipe.title}</h3>
             <p>${recipe.description}</p>
-            <button style="background-color: #b45248; color: white; border: none; padding: 0.5rem 1rem; border-radius: 20px;">
-                Ver Receita
-            </button>
-        </div>
-    `).join("");
+            <button>Ver Receita</button>
+        `;
+        grid.appendChild(card);
+    });
 }
 
-// Renderiza ao carregar a página
-document.addEventListener("DOMContentLoaded", renderRecipes);
+document.addEventListener("DOMContentLoaded", () => {
+    renderRecipes();
+
+    document.querySelectorAll(".filter-tabs .tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+            document.querySelectorAll(".filter-tabs .tab").forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            renderRecipes(tab.dataset.region);
+        });
+    });
+});
