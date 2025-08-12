@@ -3,26 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Receitas Brasileiras Melhoradas</title>
+  <title>Receitas Brasileiras</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Modal básico */
+    #recipeModal {
+      background: rgba(0, 0, 0, 0.6);
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 p-6">
 
-  <h1 class="text-3xl font-bold mb-6 text-[#167288] text-center">Receitas Brasileiras</h1>
-
-  <!-- Busca -->
-  <div class="max-w-md mx-auto mb-6">
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Busque por nome da receita..."
-      class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#167288]"
-    />
-  </div>
+  <h1 class="text-3xl font-bold mb-6 text-[#167288]">Receitas Brasileiras</h1>
 
   <!-- Filtros -->
-  <div class="max-w-md mx-auto mb-6 flex flex-wrap justify-center gap-2">
+  <div class="mb-6 space-x-2">
     <button class="filter-btn bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition" data-region="all">Todas</button>
     <button class="filter-btn bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition" data-region="sudeste">Sudeste</button>
     <button class="filter-btn bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition" data-region="nordeste">Nordeste</button>
@@ -32,25 +33,20 @@
   </div>
 
   <!-- Grid de Receitas -->
-  <section id="recipeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto"></section>
+  <section id="recipeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"></section>
 
   <!-- Modal Receita -->
-  <div id="recipeModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-6" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalInstructions">
-    <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
-      <button onclick="closeModal()" aria-label="Fechar modal" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-3xl font-bold">&times;</button>
+  <div id="recipeModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-6">
+    <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto relative">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
       <img id="modalImage" src="" alt="" class="w-full h-64 object-cover rounded-t-lg" />
       <div class="p-6">
-        <h2 id="modalTitle" class="text-3xl font-bold mb-4 text-[#167288]"></h2>
-        <h3 class="font-semibold mb-2">Ingredientes:</h3>
-        <ul id="modalIngredients" class="list-disc list-inside mb-6 max-h-48 overflow-y-auto"></ul>
-        <h3 class="font-semibold mb-2">Modo de preparo:</h3>
-        <ol id="modalInstructions" class="list-decimal list-inside mb-6 max-h-48 overflow-y-auto"></ol>
-        <p class="italic text-gray-600 mb-6">Dica: <span id="modalTip"></span></p>
-
-        <div class="flex justify-between">
-          <button id="prevBtn" class="bg-[#8cdaec] hover:bg-[#167288] text-white font-semibold py-2 px-6 rounded-full transition">Anterior</button>
-          <button id="nextBtn" class="bg-[#8cdaec] hover:bg-[#167288] text-white font-semibold py-2 px-6 rounded-full transition">Próximo</button>
-        </div>
+        <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-[#167288]"></h2>
+        <h3 class="font-semibold mb-1">Ingredientes:</h3>
+        <ul id="modalIngredients" class="list-disc list-inside mb-4"></ul>
+        <h3 class="font-semibold mb-1">Modo de preparo:</h3>
+        <ol id="modalInstructions" class="list-decimal list-inside mb-4"></ol>
+        <p class="italic text-gray-600">Dica: <span id="modalTip"></span></p>
       </div>
     </div>
   </div>
@@ -233,155 +229,73 @@
           "1 lata de leite condensado",
           "1 colher de sopa de manteiga",
           "3 colheres de sopa de chocolate em pó",
-          "Chocolate granulado para enrolar"
+          "Chocolate granulado"
         ],
         instructions: [
-          "Misture leite condensado, manteiga e chocolate em pó em uma panela.",
-          "Cozinhe em fogo médio, mexendo sempre até desgrudar do fundo.",
-          "Deixe esfriar, enrole e passe no granulado."
+          "Misture leite condensado, manteiga e chocolate em pó.",
+          "Cozinhe mexendo até desgrudar do fundo.",
+          "Deixe esfriar, enrole bolinhas e passe no granulado."
         ],
-        tip: "Sirva gelado, ótimo para festas."
+        tip: "Delícia geladinho, perfeito para festas."
       }
     };
 
-    const recipeGrid = document.getElementById('recipeGrid');
-    const searchInput = document.getElementById('searchInput');
-    const filterButtons = document.querySelectorAll('.filter-btn');
+    function renderRecipes(filterRegion = "all") {
+      const grid = document.getElementById("recipeGrid");
+      grid.innerHTML = "";
 
-    const modal = document.getElementById('recipeModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalImage = document.getElementById('modalImage');
-    const modalIngredients = document.getElementById('modalIngredients');
-    const modalInstructions = document.getElementById('modalInstructions');
-    const modalTip = document.getElementById('modalTip');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
+      const filteredRecipes = filterRegion === "all"
+        ? Object.entries(recipes)
+        : Object.entries(recipes).filter(([_, r]) => r.region === filterRegion);
 
-    let filteredKeys = Object.keys(recipes);
-    let currentIndex = 0;
-
-    function createRecipeCard(key) {
-      const recipe = recipes[key];
-      const card = document.createElement('article');
-      card.className = 'bg-white rounded-lg shadow-md cursor-pointer overflow-hidden hover:shadow-xl transition';
-      card.setAttribute('tabindex', '0');
-      card.setAttribute('role', 'button');
-      card.setAttribute('aria-label', `Abrir receita de ${recipe.title}`);
-
-      card.innerHTML = `
-        <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-48 object-cover" />
-        <div class="p-4">
-          <h2 class="text-xl font-bold mb-2 text-[#167288]">${recipe.title}</h2>
-          <p class="text-gray-600">${recipe.description}</p>
-        </div>
-      `;
-
-      card.addEventListener('click', () => openModal(key));
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          openModal(key);
-        }
-      });
-
-      return card;
-    }
-
-    function displayRecipes(keys) {
-      recipeGrid.innerHTML = '';
-      if (keys.length === 0) {
-        recipeGrid.innerHTML = '<p class="col-span-full text-center text-gray-500">Nenhuma receita encontrada.</p>';
+      if (filteredRecipes.length === 0) {
+        grid.innerHTML = `<p class="text-center col-span-full text-gray-600">Nenhuma receita encontrada para esta região.</p>`;
         return;
       }
-      keys.forEach(key => {
-        recipeGrid.appendChild(createRecipeCard(key));
-      });
+
+      for (const [id, recipe] of filteredRecipes) {
+        const card = document.createElement("div");
+        card.className = "recipe-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300 hover:shadow-lg";
+        card.innerHTML = `
+          <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-48 object-cover" />
+          <div class="p-6">
+            <h3 class="text-xl font-bold mb-2 text-[#167288]">${recipe.title}</h3>
+            <p class="text-gray-600 mb-4">${recipe.description}</p>
+            <button onclick="showRecipe('${id}')" class="bg-[#8cdaec] hover:bg-[#167288] text-white font-medium py-2 px-4 rounded-full transition">Ver Receita</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      }
     }
 
-    function filterRecipes() {
-      const searchText = searchInput.value.toLowerCase();
-      const selectedRegion = document.querySelector('.filter-btn.active')?.dataset.region || 'all';
+    function showRecipe(id) {
+      const recipe = recipes[id];
+      if (!recipe) return;
 
-      filteredKeys = Object.keys(recipes).filter(key => {
-        const recipe = recipes[key];
-        const matchesSearch = recipe.title.toLowerCase().includes(searchText);
-        const matchesRegion = selectedRegion === 'all' || recipe.region === selectedRegion;
-        return matchesSearch && matchesRegion;
-      });
-      displayRecipes(filteredKeys);
-    }
-
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        filterButtons.forEach(btn => btn.classList.remove('active', 'bg-[#167288]'));
-        button.classList.add('active', 'bg-[#167288]');
-        filterRecipes();
-      });
-    });
-
-    searchInput.addEventListener('input', filterRecipes);
-
-    // Inicial
-    filterButtons[0].classList.add('active', 'bg-[#167288]');
-    filterRecipes();
-
-    function openModal(key) {
-      currentIndex = filteredKeys.indexOf(key);
-      if (currentIndex === -1) currentIndex = 0;
-      updateModalContent();
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      modal.querySelector('button[aria-label="Fechar modal"]').focus();
-      document.addEventListener('keydown', handleModalKeydown);
-    }
-
-    function updateModalContent() {
-      const key = filteredKeys[currentIndex];
-      const recipe = recipes[key];
-      modalTitle.textContent = recipe.title;
-      modalImage.src = recipe.image;
-      modalImage.alt = recipe.title;
-      modalIngredients.innerHTML = recipe.ingredients.map(ing => `<li>${ing}</li>`).join('');
-      modalInstructions.innerHTML = recipe.instructions.map(step => `<li>${step}</li>`).join('');
-      modalTip.textContent = recipe.tip;
+      document.getElementById("modalTitle").innerText = recipe.title;
+      document.getElementById("modalImage").src = recipe.image;
+      document.getElementById("modalImage").alt = recipe.title;
+      document.getElementById("modalIngredients").innerHTML = recipe.ingredients.map(i => `<li>${i}</li>`).join("");
+      document.getElementById("modalInstructions").innerHTML = recipe.instructions.map(i => `<li>${i}</li>`).join("");
+      document.getElementById("modalTip").innerText = recipe.tip;
+      document.getElementById("recipeModal").classList.remove("hidden");
     }
 
     function closeModal() {
-      modal.classList.add('hidden');
-      document.body.style.overflow = '';
-      document.removeEventListener('keydown', handleModalKeydown);
-      searchInput.focus();
+      document.getElementById("recipeModal").classList.add("hidden");
     }
 
-    function handleModalKeydown(e) {
-      if (e.key === 'Escape') {
-        closeModal();
-      } else if (e.key === 'ArrowRight') {
-        nextRecipe();
-      } else if (e.key === 'ArrowLeft') {
-        prevRecipe();
-      }
-    }
-
-    function nextRecipe() {
-      currentIndex = (currentIndex + 1) % filteredKeys.length;
-      updateModalContent();
-    }
-
-    function prevRecipe() {
-      currentIndex = (currentIndex - 1 + filteredKeys.length) % filteredKeys.length;
-      updateModalContent();
-    }
-
-    nextBtn.addEventListener('click', nextRecipe);
-    prevBtn.addEventListener('click', prevRecipe);
-
-    // Fecha modal se clicar fora do conteúdo
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
+    // Configura filtros
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const region = btn.getAttribute("data-region");
+        renderRecipes(region);
+      });
     });
+
+    window.onload = () => {
+      renderRecipes();
+    };
   </script>
 </body>
 </html>
