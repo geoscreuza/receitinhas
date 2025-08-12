@@ -1,78 +1,56 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sabores do Brasil</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="min-h-screen">
+<body>
     <!-- Cabeçalho -->
-    <header class="bg-[#167288] text-white shadow-md">
-        <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
-            <h1 class="text-3xl font-bold">Sabores do Brasil</h1>
-            <nav class="flex space-x-6">
-                <a href="#" class="nav-link text-white font-medium transition">Home</a>
-                <a href="#" class="nav-link text-white font-medium transition">Receitas</a>
-                <a href="#" class="nav-link text-white font-medium transition">Sobre</a>
-                <a href="#" class="nav-link text-white font-medium transition">Contato</a>
-            </nav>
-        </div>
+    <header style="background-color: #167288; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="margin: 0;">Sabores do Brasil</h1>
+        <nav>
+            <a href="#" style="color: white; margin: 0 10px;">Home</a>
+            <a href="#" style="color: white; margin: 0 10px;">Receitas</a>
+            <a href="#" style="color: white; margin: 0 10px;">Sobre</a>
+            <a href="#" style="color: white; margin: 0 10px;">Contato</a>
+        </nav>
     </header>
 
-    <!-- Conteúdo -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- Destaque -->
-        <section class="mb-12 bg-[#d48c84] rounded-lg p-6 md:p-10 text-white">
-            <h2 class="text-2xl md:text-3xl font-bold mb-4">Receita em Destaque</h2>
-            <h3 class="text-xl md:text-2xl font-semibold mb-4">Feijoada Completa</h3>
-            <p class="mb-6">A tradicional feijoada brasileira, com todos os acompanhamentos que fazem desse prato uma verdadeira festa para o paladar.</p>
-            <button onclick="showRecipe('feijoada')" class="bg-[#b45248] hover:bg-[#a89a49] text-white font-bold py-2 px-6 rounded-full transition">Ver Receita</button>
-        </section>
+    <!-- Receita em Destaque -->
+    <section style="background-color: #d68a82; padding: 2rem; border-radius: 8px; margin: 2rem;">
+        <h2 style="color: white;">Receita em Destaque</h2>
+        <h3 style="color: white;">Feijoada Completa</h3>
+        <p style="color: rgba(255,255,255,0.8);">
+            A tradicional feijoada brasileira, com todos os acompanhamentos que fazem desse prato uma verdadeira festa para o paladar.
+        </p>
+        <button style="background-color: #b45248; color: white; border: none; padding: 0.5rem 1rem; border-radius: 20px;">Ver Receita</button>
+    </section>
 
-        <!-- Abas -->
-        <section class="mb-8 flex overflow-x-auto pb-2 space-x-2" id="tabs"></section>
+    <!-- Grid de Receitas -->
+    <section style="padding: 2rem;">
+        <h2 style="text-align: center; margin-bottom: 1rem;">Todas as Receitas</h2>
+        <div id="recipeGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+            <!-- Receitas geradas pelo JS -->
+        </div>
+    </section>
 
-        <!-- Grid de Receitas -->
-        <section id="recipeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"></section>
-
-        <!-- Newsletter -->
-        <section class="bg-[#a89a49] text-white rounded-lg p-8 mb-12 text-center">
-            <h2 class="text-2xl font-bold mb-4">Receba Novas Receitas</h2>
-            <p class="mb-6">Assine nossa newsletter e receba semanalmente receitas típicas de todas as regiões do Brasil.</p>
-            <form class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
-                <input type="email" placeholder="Seu melhor e-mail" class="flex-grow px-4 py-2 rounded-full text-gray-800 focus:outline-none">
-                <button type="submit" class="bg-[#b45248] hover:bg-[#167288] text-white font-bold py-2 px-6 rounded-full transition">Assinar</button>
-            </form>
-        </section>
-    </main>
+    <!-- Newsletter -->
+    <section style="background-color: #aa9a4d; padding: 2rem; border-radius: 8px; margin: 2rem; text-align: center;">
+        <h2 style="color: white;">Receba Novas Receitas</h2>
+        <p style="color: rgba(255,255,255,0.8);">
+            Assine nossa newsletter e receba semanalmente receitas típicas de todas as regiões do Brasil.
+        </p>
+        <input type="email" placeholder="Seu melhor e-mail" style="padding: 0.5rem; border-radius: 20px; border: none; width: 250px;">
+        <button style="background-color: #b45248; color: white; border: none; padding: 0.5rem 1rem; border-radius: 20px;">Assinar</button>
+    </section>
 
     <!-- Rodapé -->
-    <footer class="bg-[#167288] text-white py-8 text-center">
-        <p>© 2023 Sabores do Brasil. Todos os direitos reservados.</p>
+    <footer style="background-color: #167288; color: white; text-align: center; padding: 1rem;">
+        &copy; 2023 Sabores do Brasil. Todos os direitos reservados.
     </footer>
 
-    <!-- Modal -->
-    <div id="recipeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="modalTitle" class="text-2xl font-bold text-[#167288]"></h3>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">&times;</button>
-            </div>
-            <img id="modalImage" class="w-full h-48 object-cover mb-4 rounded">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <ul id="modalIngredients" class="list-disc pl-5 space-y-1"></ul>
-                <ol id="modalInstructions" class="list-decimal pl-5 space-y-2"></ol>
-            </div>
-            <div class="bg-[#d48c84] bg-opacity-20 p-4 rounded-lg">
-                <h4 class="font-bold text-lg mb-2 text-[#167288]">Dica do Chef</h4>
-                <p id="modalTip" class="italic"></p>
-            </div>
-        </div>
-    </div>
-
-    <script src="scripts.js"></script>
+    <script src="scripts.js" defer></script>
 </body>
 </html>
