@@ -7,66 +7,57 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Cabeçalho -->
-    <header style="background-color: #167288; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;">
-        <h1 style="margin: 0;">Sabores do Brasil</h1>
-        <nav>
-            <a href="#" style="color: white; margin: 0 10px;">Home</a>
-            <a href="#" style="color: white; margin: 0 10px;">Receitas</a>
-            <a href="#" style="color: white; margin: 0 10px;">Sobre</a>
-            <a href="#" style="color: white; margin: 0 10px;">Contato</a>
-        </nav>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container">
+            <h1>Sabores do Brasil</h1>
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">Receitas</a>
+                <a href="#">Sobre</a>
+                <a href="#">Contato</a>
+            </nav>
+        </div>
     </header>
 
-    <!-- Receita em Destaque -->
-    <section style="background-color: #d68a82; padding: 2rem; border-radius: 8px; margin: 2rem;">
-        <h2 style="color: white;">Receita em Destaque</h2>
-        <h3 style="color: white;">Feijoada Completa</h3>
-        <p style="color: rgba(255,255,255,0.8);">
-            A tradicional feijoada brasileira, com todos os acompanhamentos que fazem desse prato uma verdadeira festa para o paladar.
-        </p>
-        <button style="background-color: #b45248; color: white; border: none; padding: 0.5rem 1rem; border-radius: 20px;">Ver Receita</button>
+    <!-- RECEITA EM DESTAQUE -->
+    <section class="highlight-card">
+        <h2>Receita em Destaque</h2>
+        <h3>Feijoada Completa</h3>
+        <p>A tradicional feijoada brasileira, com todos os acompanhamentos que fazem desse prato uma verdadeira festa para o paladar.</p>
+        <button>Ver Receita</button>
     </section>
 
-    <!-- Grid de Receitas -->
-    <section style="padding: 2rem;">
-        <h2 style="text-align: center; margin-bottom: 1rem;">Todas as Receitas</h2>
-        <div id="recipeGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
-            <!-- Receitas geradas pelo JS -->
+    <!-- TODAS AS RECEITAS -->
+    <section class="recipe-section">
+        <div class="filter-tabs">
+            <button class="tab active" data-region="all">Todas</button>
+            <button class="tab" data-region="norte">Norte</button>
+            <button class="tab" data-region="nordeste">Nordeste</button>
+            <button class="tab" data-region="sudeste">Sudeste</button>
+            <button class="tab" data-region="sul">Sul</button>
+            <button class="tab" data-region="centro-oeste">Centro-Oeste</button>
         </div>
+
+        <div id="recipeGrid" class="recipe-grid"></div>
     </section>
 
-    <!-- Newsletter -->
-    <section style="background-color: #aa9a4d; padding: 2rem; border-radius: 8px; margin: 2rem; text-align: center;">
-        <h2 style="color: white;">Receba Novas Receitas</h2>
-        <p style="color: rgba(255,255,255,0.8);">
-            Assine nossa newsletter e receba semanalmente receitas típicas de todas as regiões do Brasil.
-        </p>
-        <input type="email" placeholder="Seu melhor e-mail" style="padding: 0.5rem; border-radius: 20px; border: none; width: 250px;">
-        <button style="background-color: #b45248; color: white; border: none; padding: 0.5rem 1rem; border-radius: 20px;">Assinar</button>
+    <!-- NEWSLETTER -->
+    <section class="newsletter">
+        <h2>Receba Novas Receitas</h2>
+        <p>Assine nossa newsletter e receba semanalmente receitas típicas de todas as regiões do Brasil.</p>
+        <form>
+            <input type="email" placeholder="Seu melhor e-mail">
+            <button>Assinar</button>
+        </form>
     </section>
 
-    <!-- Rodapé -->
-    <footer style="background-color: #167288; color: white; text-align: center; padding: 1rem;">
-        &copy; 2023 Sabores do Brasil. Todos os direitos reservados.
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2023 Sabores do Brasil. Todos os direitos reservados.</p>
     </footer>
 
     <script src="scripts.js" defer></script>
-
-    <section class="recipe-section">
-    <div class="filter-tabs">
-        <button class="tab active" data-region="all">Todas</button>
-        <button class="tab" data-region="norte">Norte</button>
-        <button class="tab" data-region="nordeste">Nordeste</button>
-        <button class="tab" data-region="sudeste">Sudeste</button>
-        <button class="tab" data-region="sul">Sul</button>
-        <button class="tab" data-region="centro-oeste">Centro-Oeste</button>
-    </div>
-
-    <div id="recipeGrid" class="recipe-grid">
-        <!-- Receitas vão aparecer aqui pelo JS -->
-    </div>
-</section>
-
 </body>
 </html>

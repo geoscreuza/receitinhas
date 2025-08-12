@@ -1,14 +1,58 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Arial", sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+
+/* HEADER */
+.site-header {
+    background-color: #167288;
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.site-header nav a {
+    color: white;
+    margin-left: 1rem;
+    text-decoration: none;
+}
+.site-header nav a:hover {
+    text-decoration: underline;
+}
+
+/* RECEITA EM DESTAQUE */
+.highlight-card {
+    background-color: #d68a81;
+    color: white;
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 10px;
+}
+.highlight-card button {
+    background-color: #b45248;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+}
+
+/* TODAS AS RECEITAS */
 .recipe-section {
     padding: 2rem;
 }
-
 .filter-tabs {
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
     border-bottom: 2px solid #eee;
 }
-
 .filter-tabs .tab {
     background: none;
     border: none;
@@ -16,48 +60,35 @@
     font-size: 1rem;
     cursor: pointer;
     color: #167288;
-    position: relative;
 }
-
 .filter-tabs .tab.active {
     font-weight: bold;
     border-bottom: 2px solid #b45248;
 }
-
 .recipe-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
 }
-
 .card {
     background: white;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
 }
-
-.card:hover {
-    transform: translateY(-3px);
-}
-
 .card img {
     width: 100%;
     height: 180px;
     object-fit: cover;
 }
-
 .card h3 {
     margin: 1rem;
     color: #167288;
 }
-
 .card p {
     margin: 0 1rem 1rem;
     color: #555;
 }
-
 .card button {
     background-color: #68c3d4;
     color: white;
@@ -66,9 +97,37 @@
     padding: 0.5rem 1rem;
     border-radius: 20px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
 }
-
 .card button:hover {
     background-color: #4ba9bb;
+}
+
+/* NEWSLETTER */
+.newsletter {
+    background-color: #b3a24c;
+    padding: 2rem;
+    text-align: center;
+    color: white;
+}
+.newsletter input {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 20px;
+    width: 250px;
+    margin-right: 0.5rem;
+}
+.newsletter button {
+    background-color: #b45248;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+/* FOOTER */
+footer {
+    background-color: #167288;
+    color: white;
+    text-align: center;
+    padding: 1rem;
 }
