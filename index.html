@@ -46,7 +46,7 @@
   <section id="recipeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto"></section>
 
   <!-- Modal Receita -->
-  <div id="recipeModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-6">
+  <div id="recipeModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-6" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalInstructions">
     <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
       <button onclick="closeModal()" aria-label="Fechar modal" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-3xl font-bold">&times;</button>
       <img id="modalImage" src="" alt="" class="w-full h-64 object-cover rounded-t-lg" />
@@ -244,150 +244,155 @@
           "1 lata de leite condensado",
           "1 colher de sopa de manteiga",
           "3 colheres de sopa de chocolate em pó",
-          "Chocolate granulado"
+          "Chocolate granulado para enrolar"
         ],
         instructions: [
-          "Misture leite condensado, manteiga e chocolate em pó.",
-          "Cozinhe mexendo até desgrudar do fundo.",
-          "Deixe esfriar, enrole bolinhas e passe no granulado."
+          "Misture leite condensado, manteiga e chocolate em pó em uma panela.",
+          "Cozinhe em fogo médio, mexendo sempre até desgrudar do fundo.",
+          "Deixe esfriar, enrole e passe no granulado."
         ],
-        tip: "Delícia geladinho, perfeito para festas."
+        tip: "Sirva gelado, ótimo para festas."
       }
     };
 
-    let currentFilterRegion = "all";
-    let currentSearchTerm = "";
-    let filteredRecipeEntries = [];
-    let currentRecipeIndex = 0;
+    const recipeGrid = document.getElementById('recipeGrid');
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn');
 
-    // Função para filtrar receitas baseadas em região e busca
-    function getFilteredRecipes() {
-      return Object.entries(recipes).filter(([id, r]) => {
-        const matchRegion = currentFilterRegion === "all" || r.region === currentFilterRegion;
-        const matchSearch = r.title.toLowerCase().includes(currentSearchTerm.toLowerCase());
-        return matchRegion && matchSearch;
+    const modal = document.getElementById('recipeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalImage = document.getElementById('modalImage');
+    const modalIngredients = document.getElementById('modalIngredients');
+    const modalInstructions = document.getElementById('modalInstructions');
+    const modalTip = document.getElementById('modalTip');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let filteredKeys = Object.keys(recipes);
+    let currentIndex = 0;
+
+    function createRecipeCard(key) {
+      const recipe = recipes[key];
+      const card = document.createElement('article');
+      card.className = 'bg-white rounded-lg shadow-md cursor-pointer overflow-hidden hover:shadow-xl transition';
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', `Abrir receita de ${recipe.title}`);
+
+      card.innerHTML = `
+        <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-48 object-cover" />
+        <div class="p-4">
+          <h2 class="text-xl font-bold mb-2 text-[#167288]">${recipe.title}</h2>
+          <p class="text-gray-600">${recipe.description}</p>
+        </div>
+      `;
+
+      card.addEventListener('click', () => openModal(key));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openModal(key);
+        }
       });
+
+      return card;
     }
 
-    function renderRecipes() {
-      const grid = document.getElementById("recipeGrid");
-      grid.innerHTML = "";
-      filteredRecipeEntries = getFilteredRecipes();
-
-      if (filteredRecipeEntries.length === 0) {
-        grid.innerHTML = `<p class="col-span-full text-center text-gray-500">Nenhuma receita encontrada.</p>`;
+    function displayRecipes(keys) {
+      recipeGrid.innerHTML = '';
+      if (keys.length === 0) {
+        recipeGrid.innerHTML = '<p class="col-span-full text-center text-gray-500">Nenhuma receita encontrada.</p>';
         return;
       }
-
-      filteredRecipeEntries.forEach(([id, recipe]) => {
-        const card = document.createElement("article");
-        card.className = "bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-xl transition flex flex-col";
-        card.setAttribute("tabindex", "0");
-        card.setAttribute("role", "button");
-        card.setAttribute("aria-pressed", "false");
-        card.onclick = () => openModal(id);
-        card.onkeypress = (e) => { if(e.key === "Enter") openModal(id); };
-
-        card.innerHTML = `
-          <img src="${recipe.image}" alt="${recipe.title}" class="rounded-lg mb-3 w-full h-48 object-cover" />
-          <h2 class="text-xl font-semibold text-[#167288] mb-2">${recipe.title}</h2>
-          <p class="text-gray-700 flex-grow">${recipe.description}</p>
-          <p class="mt-2 text-sm text-gray-500 capitalize font-medium">Região: ${recipe.region.replace("-", " ")}</p>
-        `;
-
-        grid.appendChild(card);
+      keys.forEach(key => {
+        recipeGrid.appendChild(createRecipeCard(key));
       });
     }
 
-    // Modal functions
-    function openModal(recipeId) {
-      currentRecipeIndex = filteredRecipeEntries.findIndex(([id]) => id === recipeId);
-      if (currentRecipeIndex === -1) return;
+    function filterRecipes() {
+      const searchText = searchInput.value.toLowerCase();
+      const selectedRegion = document.querySelector('.filter-btn.active')?.dataset.region || 'all';
 
-      const modal = document.getElementById("recipeModal");
-      updateModalContent(filteredRecipeEntries[currentRecipeIndex][1]);
-      modal.classList.remove("hidden");
-      document.body.style.overflow = "hidden"; // Evita scroll atrás do modal
-      document.getElementById("prevBtn").focus();
+      filteredKeys = Object.keys(recipes).filter(key => {
+        const recipe = recipes[key];
+        const matchesSearch = recipe.title.toLowerCase().includes(searchText);
+        const matchesRegion = selectedRegion === 'all' || recipe.region === selectedRegion;
+        return matchesSearch && matchesRegion;
+      });
+      displayRecipes(filteredKeys);
     }
 
-    function updateModalContent(recipe) {
-      document.getElementById("modalTitle").textContent = recipe.title;
-      document.getElementById("modalImage").src = recipe.image;
-      document.getElementById("modalImage").alt = recipe.title;
-      const ingrUl = document.getElementById("modalIngredients");
-      ingrUl.innerHTML = "";
-      recipe.ingredients.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        ingrUl.appendChild(li);
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach(btn => btn.classList.remove('active', 'bg-[#167288]'));
+        button.classList.add('active', 'bg-[#167288]');
+        filterRecipes();
       });
+    });
 
-      const instrOl = document.getElementById("modalInstructions");
-      instrOl.innerHTML = "";
-      recipe.instructions.forEach(step => {
-        const li = document.createElement("li");
-        li.textContent = step;
-        instrOl.appendChild(li);
-      });
+    searchInput.addEventListener('input', filterRecipes);
 
-      document.getElementById("modalTip").textContent = recipe.tip || "";
+    // Inicial
+    filterButtons[0].classList.add('active', 'bg-[#167288]');
+    filterRecipes();
+
+    function openModal(key) {
+      currentIndex = filteredKeys.indexOf(key);
+      if (currentIndex === -1) currentIndex = 0;
+      updateModalContent();
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      modal.querySelector('button[aria-label="Fechar modal"]').focus();
+      document.addEventListener('keydown', handleModalKeydown);
+    }
+
+    function updateModalContent() {
+      const key = filteredKeys[currentIndex];
+      const recipe = recipes[key];
+      modalTitle.textContent = recipe.title;
+      modalImage.src = recipe.image;
+      modalImage.alt = recipe.title;
+      modalIngredients.innerHTML = recipe.ingredients.map(ing => `<li>${ing}</li>`).join('');
+      modalInstructions.innerHTML = recipe.instructions.map(step => `<li>${step}</li>`).join('');
+      modalTip.textContent = recipe.tip;
     }
 
     function closeModal() {
-      const modal = document.getElementById("recipeModal");
-      modal.classList.add("hidden");
-      document.body.style.overflow = "auto";
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleModalKeydown);
+      searchInput.focus();
     }
 
-    // Navegação no modal
-    function showPrevRecipe() {
-      if (filteredRecipeEntries.length === 0) return;
-      currentRecipeIndex = (currentRecipeIndex - 1 + filteredRecipeEntries.length) % filteredRecipeEntries.length;
-      updateModalContent(filteredRecipeEntries[currentRecipeIndex][1]);
+    function handleModalKeydown(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      } else if (e.key === 'ArrowRight') {
+        nextRecipe();
+      } else if (e.key === 'ArrowLeft') {
+        prevRecipe();
+      }
     }
 
-    function showNextRecipe() {
-      if (filteredRecipeEntries.length === 0) return;
-      currentRecipeIndex = (currentRecipeIndex + 1) % filteredRecipeEntries.length;
-      updateModalContent(filteredRecipeEntries[currentRecipeIndex][1]);
+    function nextRecipe() {
+      currentIndex = (currentIndex + 1) % filteredKeys.length;
+      updateModalContent();
     }
 
-    // Eventos filtros
-    document.querySelectorAll(".filter-btn").forEach(btn => {
-      btn.addEventListener("click", e => {
-        currentFilterRegion = e.target.dataset.region;
-        // Atualiza estilos dos botões
-        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("bg-[#167288]"));
-        e.target.classList.add("bg-[#167288]");
-        renderRecipes();
-      });
+    function prevRecipe() {
+      currentIndex = (currentIndex - 1 + filteredKeys.length) % filteredKeys.length;
+      updateModalContent();
+    }
+
+    nextBtn.addEventListener('click', nextRecipe);
+    prevBtn.addEventListener('click', prevRecipe);
+
+    // Fecha modal se clicar fora do conteúdo
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
     });
-
-    // Evento busca
-    document.getElementById("searchInput").addEventListener("input", e => {
-      currentSearchTerm = e.target.value.trim();
-      renderRecipes();
-    });
-
-    // Eventos modal navegação
-    document.getElementById("prevBtn").addEventListener("click", showPrevRecipe);
-    document.getElementById("nextBtn").addEventListener("click", showNextRecipe);
-
-    // Fecha modal ao clicar fora do conteúdo
-    document.getElementById("recipeModal").addEventListener("click", e => {
-      if (e.target.id === "recipeModal") closeModal();
-    });
-
-    // Fecha modal com Esc
-    window.addEventListener("keydown", e => {
-      if (e.key === "Escape") closeModal();
-    });
-
-    // Inicialização
-    // Define o botão "Todas" como ativo no começo
-    document.querySelector(".filter-btn[data-region='all']").classList.add("bg-[#167288]");
-    renderRecipes();
   </script>
 </body>
 </html>
