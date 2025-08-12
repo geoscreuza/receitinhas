@@ -1,0 +1,26 @@
+
+body {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Arial", sans-serif;
+  background-color: #f8f9fa;
+}
+
+.recipe-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.active-tab {
+  border-bottom: 3px solid #b45248;
+}
+
+.card {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 16px;
+  border: 1px solid lightgray;
+  border-radius: 16px;
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}

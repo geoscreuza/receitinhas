@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sabores do Brasil</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen">
+  <!-- Cabeçalho -->
+  <header class="bg-[#167288] text-white shadow-md">
+    <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+      <h1 class="text-3xl font-bold">Sabores do Brasil</h1>
+      <nav class="flex space-x-6">
+        <a href="#" class="hover:text-[#8cdaec]">Home</a>
+        <a href="#" class="hover:text-[#8cdaec]">Receitas</a>
+        <a href="#" class="hover:text-[#8cdaec]">Sobre</a>
+        <a href="#" class="hover:text-[#8cdaec]">Contato</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- Destaque -->
+    <section class="mb-12 bg-[#d48c84] text-white p-6 md:p-10 rounded-lg">
+      <h2 class="text-2xl md:text-3xl font-bold mb-4">Receita em Destaque</h2>
+      <h3 class="text-xl md:text-2xl font-semibold mb-4">Feijoada Completa</h3>
+      <p class="mb-6">A tradicional feijoada brasileira, com todos os acompanhamentos que fazem desse prato uma verdadeira festa para o paladar.</p>
+      <button onclick="showRecipe('feijoada')" class="bg-[#b45248] hover:bg-[#a89a49] py-2 px-6 rounded-full font-bold transition">Ver Receita</button>
+    </section>
+
+    <!-- Abas -->
+    <section class="mb-8 overflow-x-auto pb-2 flex space-x-4">
+      <button onclick="filterRecipes('todas', event)" class="tab-button active-tab px-6 py-2 font-medium text-[#167288]">Todas</button>
+      <button onclick="filterRecipes('norte', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Norte</button>
+      <button onclick="filterRecipes('nordeste', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Nordeste</button>
+      <button onclick="filterRecipes('sudeste', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Sudeste</button>
+      <button onclick="filterRecipes('sul', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Sul</button>
+      <button onclick="filterRecipes('centro-oeste', event)" class="tab-button px-6 py-2 font-medium text-[#167288]">Centro-Oeste</button>
+    </section>
+
+    <!-- Grid de Receitas -->
+    <section id="recipeGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"></section>
+
+    <!-- Newsletter -->
+    <section class="bg-[#a89a49] text-white p-8 rounded-lg text-center mb-12 max-w-2xl mx-auto">
+      <h2 class="text-2xl font-bold mb-4">Receba Novas Receitas</h2>
+      <p class="mb-6">Assine nossa newsletter e receba semanalmente receitas típicas de todas as regiões do Brasil.</p>
+      <form class="flex flex-col sm:flex-row gap-4">
+        <input type="email" placeholder="Seu melhor e-mail" class="flex-grow px-4 py-2 rounded-full text-gray-800 focus:outline-none"/>
+        <button type="submit" class="bg-[#b45248] hover:bg-[#167288] py-2 px-6 rounded-full font-bold transition">Assinar</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="bg-[#167288] text-white py-8 text-center">
+    <h2 class="text-xl font-bold mb-2">Sabores do Brasil</h2>
+    <p class="text-[#8cdaec] mb-4">As melhores receitas brasileiras em um só lugar</p>
+    <div class="flex justify-center space-x-4">
+      <a href="#" class="hover:text-[#8cdaec]">Termos</a>
+      <a href="#" class="hover:text-[#8cdaec]">Privacidade</a>
+      <a href="#" class="hover:text-[#8cdaec]">Contato</a>
+    </div>
+    <p class="mt-4 text-[#8cdaec]">© 2023 Sabores do Brasil. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Modal -->
+  <div id="recipeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="modalTitle" class="text-2xl font-bold text-[#167288]">Receita</h3>
+        <button onclick="closeModal()" aria-label="Fechar modal" class="text-gray-500 hover:text-gray-700">
+          ✕
+        </button>
+      </div>
+      <img id="modalImage" src="" alt="Imagem da receita" class="w-full h-48 object-cover rounded mb-4"/>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <h4 class="font-bold text-lg mb-2 text-[#b45248]">Ingredientes</h4>
+          <ul id="modalIngredients" class="list-disc pl-5 space-y-1"></ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-lg mb-2 text-[#b45248]">Modo de Preparo</h4>
+          <ol id="modalInstructions" class="list-decimal pl-5 space-y-2"></ol>
+        </div>
+      </div>
+      <div class="bg-[#d48c84] bg-opacity-20 p-4 rounded-lg">
+        <h4 class="font-bold text-lg mb-2 text-[#167288]">Dica do Chef</h4>
+        <p id="modalTip" class="italic"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    const recipes = {
+      feijoada: {
+        title: "Feijoada Completa",
+        region: "sudeste",
+        image: "https://images.unsplash.com/photo-1547592180-85f173990554",
+        ingredients: ["1 kg de feijão preto", "100 g de carne seca", "70 g de orelha de porco"],
+        instructions: ["Coloque as carnes de molho por 36 horas ou mais.", "Cozinhe tudo junto com o feijão."],
+        tip: "Sirva com laranja e couve refogada."
+      },
+      acaraje: {
+        title: "Acarajé",
+        region: "nordeste",
+        image: "https://images.unsplash.com/photo-1605291567250-6fff7c036bd0",
+        ingredients: ["500g de feijão fradinho", "2 cebolas médias", "Sal a gosto"],
+        instructions: ["Deixe o feijão de molho.", "Frite em azeite de dendê."],
+        tip: "Sirva quente com vatapá."
+      }
+      // Adicione os outros aqui...
+    };
+
+    function renderRecipes() {
+      const grid = document.getElementById("recipeGrid");
+      grid.innerHTML = "";
+
+      for (const [id, recipe] of Object.entries(recipes)) {
+        const card = document.createElement("div");
+        card.className = "recipe-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300";
+        card.innerHTML = `
+          <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h3 class="text-lg font-semibold mb-2 text-[#b45248]">${recipe.title}</h3>
+            <p class="text-sm text-gray-600 capitalize">Região: ${recipe.region}</p>
+            <button onclick="showRecipe('${id}')" class="mt-4 bg-[#167288] hover:bg-[#a89a49] text-white py-1 px-4 rounded-full font-medium transition">Ver Receita</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+    }
+
+    function showRecipe(id) {
+      const recipe = recipes[id];
+      if (!recipe) return;
+
+      document.getElementById("modalTitle").innerText = recipe.title;
+      document.getElementById("modalImage").src = recipe.image;
+      document.getElementById("modalIngredients").innerHTML = recipe.ingredients.map(i => `<li>${i}</li>`).join("");
+      document.getElementById("modalInstructions").innerHTML = recipe.instructions.map(i => `<li>${i}</li>`).join("");
+      document.getElementById("modalTip").innerText = recipe.tip;
+      document.getElementById("recipeModal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("recipeModal").classList.add("hidden");
+    }
+
+    function filterRecipes(region, event) {
+      const buttons = document.querySelectorAll(".tab-button");
+      buttons.forEach(btn => btn.classList.remove("active-tab"));
+      if (event) event.target.classList.add("active-tab");
+
+      const grid = document.getElementById("recipeGrid");
+      grid.innerHTML = "";
+
+      for (const [id, recipe] of Object.entries(recipes)) {
+        if (region === "todas" || recipe.region === region) {
+          const card = document.createElement("div");
+          card.className = "recipe-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300";
+          card.innerHTML = `
+            <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-48 object-cover">
+            <div class="p-4">
+              <h3 class="text-lg font-semibold mb-2 text-[#b45248]">${recipe.title}</h3>
+              <p class="text-sm text-gray-600 capitalize">Região: ${recipe.region}</p>
+              <button onclick="showRecipe('${id}')" class="mt-4 bg-[#167288] hover:bg-[#a89a49] text-white py-1 px-4 rounded-full font-medium transition">Ver Receita</button>
+            </div>
+          `;
+          grid.appendChild(card);
+        }
+      }
+    }
+
+    window.onload = () => {
+      renderRecipes();
+    };
+  </script>
+</body>
+</html>
