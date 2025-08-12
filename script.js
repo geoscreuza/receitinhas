@@ -15,7 +15,7 @@ function filterRecipes(region) {
 const recipes = {
     feijoada: {
         title: "Feijoada Completa",
-        image: "https://images.unsplash.com/photo-1547592180-85f173990554",
+        image: "https://assets.unileversolutions.com/recipes-v2/229468.jpg",
         ingredients: [
             "1 kg de feijão preto",
             "100 g de carne seca",
@@ -44,7 +44,7 @@ const recipes = {
     },
     acaraje: {
         title: "Acarajé",
-        image: "https://images.unsplash.com/photo-1605291567250-6fff7c036bd0",
+        image: "https://files.agro20.com.br/uploads/2020/04/acaraj%C3%A9-1-1024x576.jpg",
         ingredients: [
             "500g de feijão fradinho",
             "2 cebolas médias",
@@ -64,7 +64,7 @@ const recipes = {
     },
     barreado: {
         title: "Barreado",
-        image: "https://images.unsplash.com/photo-1625938143087-204ca7b9c1c3",
+        image: "https://www.minhareceita.com.br/app/uploads/2024/03/barreado-portal-minha-receita.jpg",
         ingredients: [
             "2 kg de carne bovina (patinho ou coxão duro)",
             "4 cebolas grandes picadas",
@@ -88,7 +88,7 @@ const recipes = {
     },
     tacaca: {
         title: "Tacacá",
-        image: "https://images.unsplash.com/photo-1585238342024-78d90f061f9e",
+        image: "https://sabores-new.s3.amazonaws.com/public/2024/11/tacaca.jpg",
         ingredients: [
             "2 litros de tucupi",
             "200 g de camarão seco",
@@ -109,7 +109,7 @@ const recipes = {
     },
     pamonha: {
         title: "Pamonha",
-        image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641",
+        image: "https://www.otempo.com.br/content/dam/otempo/editorias/entretenimento/2023/5/entretenimento-dia-nacional-do-milho-aprenda-a-fazer-pamonha-doce-1708775729.jpeg",
         ingredients: [
             "6 espigas de milho verde",
             "1 xícara (chá) de leite",
@@ -129,7 +129,7 @@ const recipes = {
     },
     baiao: {
         title: "Baião de Dois",
-        image: "https://images.unsplash.com/photo-1601050690597-df0568f70950",
+        image: "https://sabores-new.s3.amazonaws.com/public/2024/11/baiao-de-dois-1-1-1024x494.jpg",
         ingredients: [
             "2 xícaras de arroz",
             "1 xícara de feijão verde",
