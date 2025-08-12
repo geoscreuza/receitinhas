@@ -1,26 +1,44 @@
+/* Estilos básicos */
 body {
-  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Arial", sans-serif;
-  background-color: #f8f9fa;
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Nunito', sans-serif;
+    background-color: #f8f9fa;
 }
 
-.recipe-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+h1 {
+    font-size: 16px;
+    margin-top: 0;
 }
 
-.active-tab {
-  border-bottom: 3px solid #b45248;
+p {
+    color: rgb(107, 114, 128);
+    font-size: 15px;
+    margin-bottom: 10px;
+    margin-top: 5px;
 }
 
 .card {
-  max-width: 620px;
-  margin: 0 auto;
-  padding: 16px;
-  border: 1px solid lightgray;
-  border-radius: 16px;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 16px;
+    border: 1px solid lightgray;
+    border-radius: 16px;
 }
 
 .card p:last-child {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
+/* Personalizações do site */
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.nav-link:hover {
+    color: #8cdaec;
+}
+
+.active-tab {
+    border-bottom: 3px solid #b45248;
+}
