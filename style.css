@@ -88,7 +88,7 @@ body {
     border-radius: 16px;
 }
 h1 {
-    font-size: 16px;
+    font-size: 20px;
     margin-top: 0;
 }
 p {
@@ -100,3 +100,4 @@ p {
 .card p:last-child {
     margin-bottom: 0;
 }
+
